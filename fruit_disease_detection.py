@@ -17,7 +17,7 @@ logging.basicConfig(filename=log_filename, level=logging.INFO, filemode="a")
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 NUM_CLASSES = 8
-EPOCHS = 20
+EPOCHS = 1
 
 # Tạo các đường dẫn đến các thư mục chứa dữ liệu
 train_dir = "./input/train"
@@ -76,7 +76,12 @@ model = models.Sequential(
     ]
 )
 
-model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+# Compile mô hình với các metric mới
+model.compile(
+    optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy", tf.keras.metrics.Precision(), tf.keras.metrics.Recall()],
+)
 
 
 # Tạo một callback để log thông tin sau mỗi epoch
@@ -110,19 +115,30 @@ logging.info("Mô hình đã được tải lại")
 predictions = loaded_model.predict(test_data)
 
 # Evaluate the model on test data
-test_loss, test_accuracy = model.evaluate(test_data)
-valid_loss, valid_accuracy = model.evaluate(valid_data)
+test_loss, test_accuracy, test_precision, test_recall = model.evaluate(test_data)
+# Định dạng các giá trị với 5 số thập phân
+test_loss_formatted = "{:.5f}".format(test_loss)
+test_accuracy_formatted = "{:.5f}".format(test_accuracy)
+test_precision_formatted = "{:.5f}".format(test_precision)
+test_recall_formatted = "{:.5f}".format(test_recall)
+valid_loss, valid_accuracy, valid_precision, valid_recall = model.evaluate(valid_data)
+valid_loss_formatted = "{:.5f}".format(valid_loss)
+valid_accuracy_formatted = "{:.5f}".format(valid_accuracy)
+valid_precision_formatted = "{:.5f}".format(valid_precision)
+valid_recall_formatted = "{:.5f}".format(valid_recall)
 
 # Calculate Precision and Recall
 y_true = valid_data.classes
-y_pred = np.argmax(predictions, axis=1)
+y_pred = model.predict(test_data)
+y_pred_classes = np.argmax(y_pred, axis=1)  # Chuyển đổi nếu cần
 
 print("Hình dạng của y_true: ", y_true.shape)
 print("Hình dạng của y_pred: ", y_pred.shape)
 # Ensure that y_true and y_pred have the same number of samples
 y_true = y_true[: len(y_pred)]
 
-precision = precision_score(y_true, y_pred, average="macro")
+precision = round(precision_score(y_true, y_pred, average="macro"), 5)
+
 recall = recall_score(y_true, y_pred, average="macro")
 logging.info(f"Validation Precision: {precision:.5f}")
 logging.info(f"Validation Recall: {recall:.5f}")
