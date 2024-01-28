@@ -14,10 +14,14 @@ categories = [
 sets = ["train", "test", "val"]
 
 # Đếm số lượng hình ảnh trong mỗi thư mục
+sum = 0
 for set_name in sets:
     print(f"--- {set_name.upper()} SET ---")
     for category in categories:
         path = os.path.join(data_dir, set_name, category)
         count = len(os.listdir(path))
+        sum += count
         print(f"{category}: {count} images")
     print()
+
+print(sum)

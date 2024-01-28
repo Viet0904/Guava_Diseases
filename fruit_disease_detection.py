@@ -17,7 +17,7 @@ logging.basicConfig(filename=log_filename, level=logging.INFO, filemode="a")
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 NUM_CLASSES = 8
-EPOCHS = 10
+EPOCHS = 20
 
 # Tạo các đường dẫn đến các thư mục chứa dữ liệu
 train_dir = "./input/train"
@@ -83,7 +83,7 @@ model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accur
 def epoch_end_log(epoch, logs):
     logging.info(f"Epoch {epoch+1}/{EPOCHS}")
     logging.info(
-        f"loss: {logs['loss']:.4f} - accuracy: {logs['accuracy']:.4f} - val_loss: {logs['val_loss']:.4f} - val_accuracy: {logs['val_accuracy']:.4f}"
+        f"loss: {logs['loss']:.5f} - accuracy: {logs['accuracy']:.5f} - val_loss: {logs['val_loss']:.5f} - val_accuracy: {logs['val_accuracy']:.5f}"
     )
 
 
@@ -124,13 +124,13 @@ y_true = y_true[: len(y_pred)]
 
 precision = precision_score(y_true, y_pred, average="macro")
 recall = recall_score(y_true, y_pred, average="macro")
-logging.info(f"Validation Precision: {precision:.4f}")
-logging.info(f"Validation Recall: {recall:.4f}")
+logging.info(f"Validation Precision: {precision:.5f}")
+logging.info(f"Validation Recall: {recall:.5f}")
 
-logging.info(f"Test Loss: {test_loss:.4f}")
-logging.info(f"Test Accuracy: {test_accuracy:.4f}")
-logging.info(f"Validation Loss: {valid_loss:.4f}")
-logging.info(f"Validation Accuracy: {valid_accuracy:.4f}")
+logging.info(f"Test Loss: {test_loss:.5f}")
+logging.info(f"Test Accuracy: {test_accuracy:.5f}")
+logging.info(f"Validation Loss: {valid_loss:.5f}")
+logging.info(f"Validation Accuracy: {valid_accuracy:.5f}")
 
 # Đóng tệp log khi hoàn thành
 logging.shutdown()
