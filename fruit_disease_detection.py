@@ -17,7 +17,7 @@ logging.basicConfig(filename=log_filename, level=logging.INFO, filemode="a")
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 NUM_CLASSES = 8
-EPOCHS = 1
+EPOCHS = 10
 
 # Tạo các đường dẫn đến các thư mục chứa dữ liệu
 train_dir = "./input/train"
@@ -127,26 +127,15 @@ valid_accuracy_formatted = "{:.5f}".format(valid_accuracy)
 valid_precision_formatted = "{:.5f}".format(valid_precision)
 valid_recall_formatted = "{:.5f}".format(valid_recall)
 
-# Calculate Precision and Recall
-y_true = valid_data.classes
-y_pred = model.predict(test_data)
-y_pred_classes = np.argmax(y_pred, axis=1)  # Chuyển đổi nếu cần
-
-print("Hình dạng của y_true: ", y_true.shape)
-print("Hình dạng của y_pred: ", y_pred.shape)
-# Ensure that y_true and y_pred have the same number of samples
-y_true = y_true[: len(y_pred)]
-
-precision = round(precision_score(y_true, y_pred, average="macro"), 5)
-
-recall = recall_score(y_true, y_pred, average="macro")
-logging.info(f"Validation Precision: {precision:.5f}")
-logging.info(f"Validation Recall: {recall:.5f}")
 
 logging.info(f"Test Loss: {test_loss:.5f}")
 logging.info(f"Test Accuracy: {test_accuracy:.5f}")
+logging.info(f"Validation Precision: {test_precision_formatted:.5f}")
+logging.info(f"Validation Recall: {test_recall_formatted:.5f}")
 logging.info(f"Validation Loss: {valid_loss:.5f}")
 logging.info(f"Validation Accuracy: {valid_accuracy:.5f}")
+logging.info(f"Validation Loss: {valid_precision_formatted :.5f}")
+logging.info(f"Validation Accuracy: {valid_recall_formatted:.5f}")
 
 # Đóng tệp log khi hoàn thành
 logging.shutdown()
